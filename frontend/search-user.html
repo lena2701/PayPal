@@ -37,30 +37,34 @@
     <div class="pp-search-user">
         <i class="fa-solid fa-magnifying-glass"></i>
         <input type="text" id="user-search" placeholder="Name, Benutzername, E-Mail-Adresse">
+         <div id="search-dropdown" class="search-dropdown hidden"></div>
     </div>
+   
 
     <div class="next-button">
         <button disabled>Weiter</button>
     </div>
 
     <div class="recent-users">
-        <div class="user">
-            <div class="bubble" style="background:#70C0FF;">TL</div>
+        <div class="user" data-name="Tom Lichtenstein" data-initials="TL">
+            <div class= "bubble" style="background:#70C0FF;">TL</div>
             <div class="contact-name"> <span>Tom Lichtenstein</span></div>
         </div>
 
-        <div class="user">
+        <div class="user" data-name="Finn Blautal" data-initials="FB">
             <div class="bubble" style="background:#0028A0; color:white;">FB</div>
             <div class="contact-name"> <span>Finn Blautal</span></div>
         </div>
 
-        <div class="user">
+        <div class="user" data-name="Melissa Hempel" data-initials="MH">
             <div class="bubble" style="background:#FFB800;">MH</div>
             <div class="contact-name"> <span>Melissa Hemptel</span></div>
+        </div>
 
+    </div>
 
-
-            <script src="script.js"></script>
+    <script src="search-user.js"></script>
+    <script src="main.js"></script>
 </body>
 
 </html>
