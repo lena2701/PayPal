@@ -37,12 +37,31 @@
                 <div class="user-name"></div>
             </div>
 
-            <div class="amount-row">
-                <span class="currency-symbol">€</span>
-                <input type="text" class="amount-input" value="0,00">
-                <button id="open-currency-popup" class="currency-button">
-                    EUR <i class="fa-solid fa-chevron-down"></i>
-                </button>
+            <div class="send-section">
+                <span class="label">Sie senden</span>
+                <div class="amount-row">
+                    <span class="currency-symbol">€</span>
+                    <input type="text" class="amount-input" value="0,00">
+                    <button id="send-currency" class="currency-button">
+                        EUR <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                </div>
+            </div>
+
+            <hr class="divider">
+
+            <div class="receive-section hidden" id="receive-section">
+                <span class="label">Empfänger erhält</span>
+                <div class="receive-row">
+                    <span class="receive-amount" id="receive-amount">0,00</span>
+                    <button id="receive-currency" class="currency-button">
+                        EUR <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="exchange-rate-info" class="exchange-rate-info hidden">
+                <span id="exchange-rate"></span>
             </div>
 
             <div class="message-box">
@@ -55,24 +74,29 @@
             </div>
 
         </div>
-        <div id="currency-dropdown" class="currency-dropdown hidden">
-            <div class="currency-dropdown-inner">
+    </div>
 
-                <div class="currency-header-row">
-                    <button id="close-currency-dropdown" class="currency-close">
-                        <i class="fa-solid fa-chevron-left"></i>
-                    </button>
-                </div>
+   <div id="currency-dropdown" class="currency-dropdown hidden">
+    <div class="currency-dropdown-inner">
 
-                <input type="text" id="currency-search" placeholder="Suchen..." class="currency-search-input">
+        <button id="close-currency-dropdown" class="currency-close">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
 
-                <div id="currency-list" class="currency-list">
-                </div>
+        <input 
+            type="text" 
+            id="currency-search" 
+            placeholder="Suchen..." 
+            class="currency-search-input"
+        >
 
-            </div>
-        </div>
-        <script src="main.js"></script>
-        <script src="amount.js"></script>
+        <div id="currency-list" class="currency-list"></div>
+
+    </div>
+</div>
+
+    <script src="main.js"></script>
+    <script src="amount.js"></script>
 </body>
 
 </html>
