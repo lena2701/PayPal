@@ -1,16 +1,5 @@
 function initializeAmountPage() {
 
-    async function fetchRate(from, to) {
-    try {
-        const response = await fetch(`/api/exchange-rate?from=${from}&to=${to}`);
-        const data = await response.json();
-        return data.rate;
-    } catch (error) {
-        console.error("Fehler beim Fetchen des Wechselkurses:", error);
-        return null;
-    }
-}
-
     const params = new URLSearchParams(window.location.search);
     const name = params.get("name");
     const initials = params.get("initials");
@@ -47,12 +36,6 @@ function initializeAmountPage() {
     JPY: "¥",
     GBP: "£"
 };
-
-    const fxRates = {
-        USD: 1.12,
-        JPY: 160.0,
-        GBP: 0.86
-    };
 
     function formatEuro(rawDigits) {
         const num = Number(rawDigits);
@@ -109,23 +92,41 @@ function updateReceiveAmount() {
         dropdown.classList.add("hidden");
     });
 
-    function updateExchangeRateInfo() {
-        if (selectedCurrency === "EUR") {
-            receiveSection.classList.add("hidden");
+async function updateExchangeRateInfo() {
+    if (selectedCurrency === "EUR") {
+        receiveSection.classList.add("hidden");
+        exchangeRateInfo.classList.add("hidden");
+        currentRate = 1;
+        updateReceiveAmount();
+        return;
+    }
+
+    try {
+        const res = await fetch(
+            "http://localhost:8080/api/exchange-rate?fromCurrency=EUR&toCurrency=" + encodeURIComponent(selectedCurrency)
+        );
+
+        if (!res.ok) {
+            console.error("Fehler vom Server:", res.status);
             exchangeRateInfo.classList.add("hidden");
-            currentRate = 1;
             return;
         }
 
-        currentRate = fxRates[selectedCurrency];
+        const data = await res.json();
+        console.log("Wechselkurs Antwort:", data);
+
+        currentRate = Number(data.rate);
+
         receiveSection.classList.remove("hidden");
         exchangeRateInfo.classList.remove("hidden");
-
         exchangeRateText.textContent = `1 EUR = ${currentRate} ${selectedCurrency}`;
 
         updateReceiveAmount();
-    }
 
+    } catch (err) {
+        console.error("Fehler beim Laden des Wechselkurses:", err);
+    }
+}
     function renderCurrencyList(filter = "") {
         const search = filter.toLowerCase();
         list.innerHTML = "";

@@ -102,6 +102,7 @@ body {
     font-family: Arial, sans-serif;
     position: relative;
 }
+
 .pp-search-user i {
     font-size: 18px;
     color: #828282;
@@ -184,13 +185,12 @@ body {
     cursor: not-allowed;
     margin-right: 1100px;
 }
-
 .recent-users {
     display: flex;
     justify-content: center;
-    gap: 40px;
-    margin-top: 40px;
-    margin-right: 850px;
+    gap: 60px;
+    margin-top: 50px;
+    margin-right: 1000px;
 }
 
 .user {

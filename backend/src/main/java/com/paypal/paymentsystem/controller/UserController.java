@@ -1,5 +1,6 @@
 package com.paypal.paymentsystem.controller;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/users")
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -33,6 +35,12 @@ public class UserController {
     public List<UserResponseDTO> searchUsers(@RequestParam String name) {
         return userService.searchUsersByName(name);
     }
-  }
-    
 
+    @GetMapping
+    public List<UserResponseDTO> getAllUsers() {
+        return userService.getAllUsers().stream()
+                .map(user -> new UserResponseDTO(user.getPaypalUserId(), user.getFullName(), user.getEmail()))
+                .toList();
+
+  }
+}    

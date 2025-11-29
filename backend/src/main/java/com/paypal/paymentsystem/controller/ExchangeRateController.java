@@ -1,5 +1,6 @@
 package com.paypal.paymentsystem.controller;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,12 +15,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
-@RequestMapping("/api/exchangerate")
+@RequestMapping("/api")
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class ExchangeRateController {
     private final ExchangeRateService exchangeRateService;
 
-    @GetMapping
+    @GetMapping("/exchange-rate")
     public ExchangeRateResponseDTO getExchangeRate(@RequestParam String fromCurrency, @RequestParam String toCurrency ) {
         return exchangeRateService.getExchangeRate(fromCurrency, toCurrency);
     

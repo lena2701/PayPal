@@ -5,7 +5,8 @@ import java.math.BigDecimal;
 import lombok.Getter;
 
 @Getter
-public class ExchangeRateResponseDTO {    private String fromCurrency;
+public class ExchangeRateResponseDTO {   
+    private String fromCurrency;
     private String toCurrency;
     private BigDecimal rate;
 
