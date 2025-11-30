@@ -70,6 +70,7 @@ body {
     align-items: center;
     width: 85%;
     margin: 40px auto 0 auto;
+    margin-left: 500px;
 }
 
 .page-title {
@@ -98,7 +99,7 @@ body {
     gap: 15px;
     margin: 40px auto;
     margin-top: 25px;
-    margin-left: 100px;
+    margin-left: 350px;
     font-family: Arial, sans-serif;
     position: relative;
 }
@@ -133,6 +134,11 @@ body {
 .search-dropdown.visible {
     display: block;
 }
+
+.search-dropdown.hidden {
+    display: none;
+}
+
 .search-item {
     padding: 14px 22px;
     cursor: pointer;
@@ -173,6 +179,7 @@ body {
     display: flex;
     justify-content: center;
     margin-top: 20px;
+    margin-left: 500px;
 }
 
 .next-button button {
@@ -185,13 +192,7 @@ body {
     cursor: not-allowed;
     margin-right: 1100px;
 }
-.recent-users {
-    display: flex;
-    justify-content: center;
-    gap: 60px;
-    margin-top: 50px;
-    margin-right: 1000px;
-}
+
 
 .user {
     text-align: center;

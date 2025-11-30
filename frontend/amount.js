@@ -3,6 +3,7 @@ function initializeAmountPage() {
     const params = new URLSearchParams(window.location.search);
     const name = params.get("name");
     const initials = params.get("initials");
+    const receiverPaypalId = params.get("paypalId"); 
 
     document.querySelector(".user-name").textContent = name || "";
     document.querySelector(".user-bubble").textContent = initials || "";
@@ -165,4 +166,51 @@ async function updateExchangeRateInfo() {
     });
 
     updateExchangeRateInfo();
+
+document.querySelector(".send").addEventListener("click", async () => {
+        const senderPaypalId = params.get("senderPaypalId") || "Lisa_Steinert";
+        const receiverId = receiverPaypalId || params.get("receiverPaypalId");
+        const amountRaw = amountInput.value.replace(/\D/g, "");
+        const amount = Number(amountRaw) / 100;
+        const description = textarea.value;
+
+        if (!receiverId) {
+            alert("Empfänger konnte nicht ermittelt werden. Bitte erneut einen Empfänger auswählen.");
+            return;
+        }
+
+        const payload = {
+            senderPaypalId: senderPaypalId,
+            receiverPaypalId: receiverId,
+            amount: amount,
+            senderCurrencyCode: "EUR",
+            receiverCurrencyCode: selectedCurrency,
+            description: description
+        };
+
+        console.log("SENDE TRANSAKTION", payload);
+
+        try {
+            const res = await fetch("http://localhost:8080/api/transactions", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            if (!res.ok) {
+                alert("Fehler beim Senden der Transaktion");
+                return;
+            }
+
+            const data = await res.json();
+            console.log("Transaktion erfolgreich:", data);
+
+            alert("Transaktion erfolgreich!");
+
+        } catch (err) {
+            console.error("Fehler beim POST:", err);
+            alert("Serverfehler!");
+        }
+    });
+
 }

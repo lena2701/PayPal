@@ -47,6 +47,7 @@ function initializeSearchUserPage() {
 
         if (filter === '') {
             searchDropdown.classList.remove('visible');
+            searchDropdown.classList.add('hidden');
             return;
         }
 
@@ -56,11 +57,15 @@ function initializeSearchUserPage() {
 
         if (users.length === 0) {
             searchDropdown.classList.remove('visible');
+            searchDropdown.classList.add('hidden');
             return;
         }
 
         users.forEach(user => {
-            if (!user.fullName) return;
+            if (!user.fullName || !user.paypalUserId) {
+                console.warn("Überspringe Eintrag ohne paypalUserId oder Name", user);
+                return;
+            }
 
             const userDiv = document.createElement('div');
             userDiv.classList.add('search-item');
@@ -73,61 +78,25 @@ function initializeSearchUserPage() {
                     <span>${user.fullName}</span>
                 </div>
             `;
-
-            userDiv.addEventListener('click', function () {
+            userDiv.addEventListener("click", () => {
                 const ziel =
-                    `amount.html?name=${encodeURIComponent(user.fullName)}&initials=${encodeURIComponent(user.initials)}`;
+                    `amount.html?name=${encodeURIComponent(user.fullName)}&initials=${encodeURIComponent(user.initials)}&paypalId=${encodeURIComponent(user.paypalUserId)}`;
+
                 window.location.href = ziel;
             });
 
             searchDropdown.appendChild(userDiv);
         });
 
+        searchDropdown.classList.remove('hidden');
         searchDropdown.classList.add('visible');
     });
 
     document.addEventListener('click', function (event) {
-        if (!searchDropdown.contains(event.target) && event.target !== searchInput) {
+        if (!searchDropdown.contains(event.target) &&
+            event.target !== searchInput) {
             searchDropdown.classList.remove('visible');
+            searchDropdown.classList.add('hidden');
         }
-    });
-
-    loadRecentUsers();
-}
-
-async function loadRecentUsers() {
-    const container = document.getElementById("recent-users");
-    if (!container) return;
-
-    const recentUsers = [
-        { name: "Tom Lichtenstein", initials: "TL" },
-        { name: "Melissa Hempel", initials: "MH" },
-    ];
-
-    function getColor(initials) {
-        const colors = {
-            "TL": "#70C0FF",
-            "MH": "#FFB800",
-        };
-        return colors[initials] || "#003087";
-    }
-
-    container.innerHTML = "";
-
-    recentUsers.forEach(user => {
-        const div = document.createElement("div");
-        div.classList.add("user");
-
-        div.innerHTML = `
-            <div class="bubble" style="background:${getColor(user.initials)}">${user.initials}</div>
-            <div class="contact-name"><span>${user.name}</span></div>
-        `;
-
-        div.addEventListener("click", () => {
-            const ziel = `amount.html?name=${encodeURIComponent(user.name)}&initials=${encodeURIComponent(user.initials)}`;
-            window.location.href = ziel;
-        });
-
-        container.appendChild(div);
     });
 }
