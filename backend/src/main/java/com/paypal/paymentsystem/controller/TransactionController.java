@@ -26,8 +26,8 @@ public class TransactionController {
         request.getAmount(), request.getDescription(), request.getSenderCurrencyCode(), request.getReceiverCurrencyCode());
         
         return new TransactionResponseDTO(
-            String.valueOf(transac.getSenderAccount().getId()),
-            String.valueOf(transac.getReceiverAccount().getId()),
+            String.valueOf(transac.getSenderAccountId()),
+            String.valueOf(transac.getReceiverAccountId()),
             transac.getAmountSender(),
             transac.getAmountReceiver(),
             transac.getSenderCurrency(),
@@ -35,7 +35,8 @@ public class TransactionController {
             transac.getExchangeRate(),
             transac.getFee(),
             transac.getStatus(),
-            transac.getDescription()
+            transac.getDescription(),
+            transac.getReceiverName()
     );
     }
     

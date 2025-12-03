@@ -17,10 +17,11 @@ public class TransactionResponseDTO {
     private BigDecimal fee;
     private String status;
     private String message;
+    private String receiverName;
 
     public TransactionResponseDTO (String senderAccountId, String receiverAccountId, BigDecimal amountSender,
         BigDecimal amountReceiver, String senderCurrency, String receiverCurrency, BigDecimal exchangeRate,
-        BigDecimal fee, String status, String message) {
+        BigDecimal fee, String status, String message, String receiverName) {
             this.senderAccountId = senderAccountId;
             this.receiverAccountId = receiverAccountId;
             this.amountSender = amountSender;
@@ -31,6 +32,7 @@ public class TransactionResponseDTO {
             this.fee = fee;
             this.status = status;
             this.message = message;
+            this.receiverName = receiverName;
         }
    
     

@@ -10,6 +10,7 @@ import com.paypal.paymentsystem.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,7 @@ public class TransactionService {
     private final CurrencyService currencyService;
     private final ExchangeRateService exchangeRateService;
     private final DataSource dataSource;
+    private static final BigDecimal FEE_RATE = new BigDecimal("0.03"); 
 
     public Transaction processTransaction(String senderPayPalId, String receiverPayPalId, BigDecimal amount,
             String description, String senderCurrencyCode, String receiverCurrencyCode) {
@@ -57,62 +59,69 @@ public class TransactionService {
         Currency senderCurrency = currencyService.getCurrency(senderCurrencyCode);
         Currency receiverCurrency = currencyService.getCurrency(receiverCurrencyCode);
 
-        Account senderAcc = accountService.getAccountByUserAndCurrency(sender, senderCurrency);
-        Account receiverAcc = accountService.getAccountByUserAndCurrency(receiver, receiverCurrency);
-
-        BigDecimal exchangeRate;
-
-        if (senderCurrency.getCode().equals(receiverCurrency.getCode())) {
-
-            exchangeRate = BigDecimal.ONE;
-        } else {
-
-            exchangeRate = exchangeRateService.getRate(
-                    senderCurrency.getCode(),
-                    receiverCurrency.getCode());
-        }
+        boolean sameCurrency = senderCurrency.getCode().equals(receiverCurrency.getCode());
+        BigDecimal exchangeRate = sameCurrency
+                ? BigDecimal.ONE
+                : exchangeRateService.getRate(senderCurrency.getCode(), receiverCurrency.getCode());
 
         BigDecimal amountReceiver = amount.multiply(exchangeRate);
+        BigDecimal fee = sameCurrency
+                ? BigDecimal.ZERO
+                : amount.multiply(FEE_RATE).setScale(2, RoundingMode.HALF_UP);
 
         String transactionId = null;
         String status = null;
         String message = null;
+        int senderAccountId = 0;
+        int receiverAccountId = 0;
 
         try (Connection connection = dataSource.getConnection();
-                CallableStatement call = connection.prepareCall("{ CALL ProccessTransaction(?, ?, ?, ?, ?, ?, ?) }")) {
+                CallableStatement call = connection.prepareCall(
+                        "{ CALL ProccessTransaction(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) }")) {
 
             call.setString(1, senderPayPalId);
             call.setString(2, receiverPayPalId);
             call.setBigDecimal(3, amount);
             call.setString(4, description);
+            call.setString(5, senderCurrencyCode);
 
-            call.registerOutParameter(5, Types.VARCHAR);
             call.registerOutParameter(6, Types.VARCHAR);
             call.registerOutParameter(7, Types.VARCHAR);
+            call.registerOutParameter(8, Types.VARCHAR);
+            call.registerOutParameter(9, Types.INTEGER);
+            call.registerOutParameter(10, Types.INTEGER);
+            call.registerOutParameter(11, Types.CHAR);
 
             call.execute();
 
-            transactionId = call.getString(5);
-            status = call.getString(6);
-            message = call.getString(7);
+            transactionId = call.getString(6);
+            status = call.getString(7);
+            message = call.getString(8);
+            senderAccountId = call.getInt(9);
+            receiverAccountId = call.getInt(10);
+            receiverCurrencyCode = call.getString(11);
+
 
         } catch (Exception e) {
             throw new RuntimeException("Fehler beim Aufrufen der Stored Procedure", e);
         }
         Transaction result = new Transaction();
+
         result.setTransactionId(transactionId);
-        result.setSenderAccount(senderAcc);
-        result.setReceiverAccount(receiverAcc);
+        result.setSenderAccountId(senderAccountId);
+        result.setReceiverAccountId(receiverAccountId);
+        result.setReceiverName(receiver.getFullName());
+
         result.setAmountSender(amount);
         result.setAmountReceiver(amountReceiver);
         result.setSenderCurrency(senderCurrency.getCode());
-        result.setReceiverCurrency(receiverCurrency.getCode());
+        result.setReceiverCurrency(receiverCurrencyCode); 
         result.setExchangeRate(exchangeRate);
+        result.setFee(fee);
         result.setStatus(status);
         result.setDescription(message);
         result.setCreatedAt(LocalDateTime.now());
         result.setUpdatedAt(LocalDateTime.now());
-
         return result;
     }
 }

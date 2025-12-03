@@ -17,13 +17,9 @@ public class Transaction {
     @Column(name = "transaction_id")
     private String transactionId;
 
-    @ManyToOne
-    @JoinColumn(name = "sender_account_id", nullable = false)
-    private Account senderAccount;
-
-    @ManyToOne
-    @JoinColumn(name = "receiver_account_id", nullable = false)
-    private Account receiverAccount;
+    private Integer senderAccountId;
+    
+    private Integer receiverAccountId;
 
     @Column(name = "amount_sender")
     private BigDecimal amountSender;
@@ -45,6 +41,8 @@ public class Transaction {
     private String status;
 
     private String description;
+
+    private String receiverName;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
