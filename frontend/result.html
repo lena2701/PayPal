@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>PayPal: Geld senden</title>
-    <link rel="stylesheet" href="search-user.css">
+    <link rel="stylesheet" href="result.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
@@ -32,21 +32,20 @@
     </div>
 </header>
 
-<div class="title-row">
-    <h1 class="page-title">Geld senden und anfordern</h1>
+<div class="result-container">
+
+    <div id="result-box" class="result-box">
+        <h2 id="title"></h2>
+        <p id="subtitle"></p>
+    </div>
+
+    <div class="send-again-container">
+        <button id="send-again" class="send-again-btn">Mehr Geld senden</button>
+    </div>
+
 </div>
 
-<div class="pp-search-user">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <input type="text" id="user-search" placeholder="Name, Benutzername, E-Mail-Adresse">
-    <div id="search-dropdown" class="search-dropdown hidden"></div>
-</div>
-
-<div class="next-button">
-    <button disabled>Weiter</button>
-</div>  
-
-<script src="search-user.js"></script>
+<script src="result.js"></script>
 <script src="main.js"></script>
 
 
