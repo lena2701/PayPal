@@ -1,53 +1,81 @@
 <!DOCTYPE html>
-<html>
+<html lang="de">
 
 <head>
     <meta charset="UTF-8">
-    <title>PayPal: Geld senden</title>
-    <link rel="stylesheet" href="result.css">
+    <title>PayPal – Ergebnis</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <link rel="stylesheet" href="result.css">
+    <link rel="stylesheet" href="header.css">
 </head>
 
-<body>
+<body class="bg-light">
 
-<header class="pp-header">
-    <div class="pp-header-content">
-        <div class="pp-logo">
-            <img src="https://www.paypalobjects.com/webstatic/icon/pp258.png">
+<!-- Header wiederverwendet -->
+<nav class="navbar navbar-expand-lg navbar-dark pp-bg">
+    <div class="container">
+
+        <a class="navbar-brand fw-bold d-flex align-items-center" href="#">
+            <img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" height="36" class="me-2">
+        </a>
+
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mx-auto gap-4">
+                <li class="nav-item">
+                    <span class="nav-link text-white">Startseite</span>
+                </li>
+                <li class="nav-item">
+                    <span class="nav-link active fw-bold text-white" style="background:rgba(255,255,255,0.25); padding:8px 18px; border-radius:20px;">
+                        Geld senden
+                    </span>
+                </li>
+                <li class="nav-item"><span class="nav-link text-white">Wallet</span></li>
+                <li class="nav-item"><span class="nav-link text-white">Aktivitäten</span></li>
+                <li class="nav-item"><span class="nav-link text-white">Hilfe</span></li>
+            </ul>
         </div>
 
-        <nav class="pp-nav">
-            <span>Startseite</span>
-            <span class="active">Geld senden</span>
-            <span>Wallet</span>
-            <span>Aktivitäten</span>
-            <span>Hilfe</span>
-        </nav>
+        <div class="d-flex align-items-center gap-4 text-white">
+            <div class="position-relative">
+                <i class="fa-solid fa-bell fa-lg"></i>
+                <span class="badge bg-danger rounded-circle position-absolute top-0 start-100 translate-middle p-1">
+                    10
+                </span>
+            </div>
 
-        <div class="nav-icons">
-            <i class="fa-solid fa-bell"></i>
-            <i class="fa-solid fa-gear"></i>
-            <span class="pp-logout">AUSLOGGEN</span>
+            <i class="fa-solid fa-gear fa-lg"></i>
+
+            <span class="fw-semibold" style="cursor:pointer;">AUSLOGGEN</span>
         </div>
+
     </div>
-</header>
+</nav>
 
-<div class="result-container">
+<div class="container d-flex justify-content-center mt-5">
 
-    <div id="result-box" class="result-box">
-        <h2 id="title"></h2>
-        <p id="subtitle"></p>
-    </div>
-
-    <div class="send-again-container">
-        <button id="send-again" class="send-again-btn">Mehr Geld senden</button>
+    <div id="result-box" class="card shadow-sm p-4 text-center" style="max-width: 650px;">
+        <h2 id="title" class="fw-bold"></h2>
+        <p id="subtitle" class="mt-2"></p>
+        <p id="fee-info" class="fee-info hidden"></p>
     </div>
 
 </div>
 
+<div class="text-center mt-4">
+    <button class="btn btn-dark px-4 py-2 rounded-pill" id="send-again">
+        Mehr Geld senden
+    </button>
+</div>
+
 <script src="result.js"></script>
 <script src="main.js"></script>
-
 
 </body>
 </html>

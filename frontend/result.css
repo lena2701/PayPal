@@ -1,97 +1,18 @@
-body {
-    margin: 0;
-    padding: 0;
-}
 
-.pp-header {
-    background-color: #003087;
-    height: 90px;
-    display: flex;
-    align-items: center;
-    color: white;
-    font-family: Arial, sans-serif;
-    width: 100%;
-}
-
-.pp-header-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 95%;
-    margin: 0 auto;
-}
-
-.pp-logo img {
-    height: 40px;
-    filter: brightness(0) invert(1);
-}
-
-.pp-nav {
-    display: flex;
-    gap: 50px;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-.pp-nav span {
-    display: flex;
-    align-items: center;
-}
-
-.pp-nav span.active {
-    background-color: rgba(255, 255, 255, 0.2);
-    padding: 8px 18px;
-    border-radius: 20px;
-}
-
-.nav-icons {
-    display: flex;
-    gap: 20px;
-}
-
-.result-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 100px;
-}
-
-.result-box {
-    background: white;
-    padding: 40px;
-    width: 600px;
-    border-radius: 14px;
-    text-align: center;
-    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
-}
-
-.result-box.error {
-    border: 3px solid #c72c41;
-    font-family: Arial, sans-serif;
-}
-
-.result-box.success {
+#result-box.success {
     border: 3px solid #0c7a35;
-    font-family: Arial, sans-serif;
 }
 
-.result-box h2 {
-    font-size: 22px;
-    font-weight: bold;
+#result-box.error {
+    border: 3px solid #c72c41;
 }
 
-.send-again-container {
-    margin-top: 25px;
-    text-align: center;
-    width: 100%;
+.fee-info {
+    margin-top: 10px;
+    color: #444;
+    font-size: 15px;
 }
 
-.send-again-btn {
-    background: black;
-    color: white;
-    padding: 12px 30px;
-    border-radius: 25px;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
+.hidden {
+    display: none;
 }

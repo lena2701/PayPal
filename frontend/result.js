@@ -3,13 +3,13 @@ function initializeResultPage() {
     console.log("TRANSACTION RESULT:", text);
     localStorage.removeItem("transactionResult");
 
-    const title    = document.getElementById("title");
+    const title = document.getElementById("title");
     const subtitle = document.getElementById("subtitle");
-    const box      = document.getElementById("result-box");
+    const box = document.getElementById("result-box");
 
     if (!text) {
         box.classList.add("error");
-        title.innerText    = "Fehler";
+        title.innerText = "Fehler";
         subtitle.innerText = "Es konnten keine Transaktionsinformationen geladen werden.";
         return;
     }
@@ -17,25 +17,26 @@ function initializeResultPage() {
     if (text.status === "COMPLETED") {
         box.classList.add("success");
 
-        // Betrag, den DU gesendet hast (aus der DB)
         const amount = text.amountSender ?? text.amount ?? 0;
 
-        // Jetzt: die im Dropdown gewählte Währung kommt als senderCurrency aus dem Backend
         const senderChosenCurrency = text.senderCurrency || "EUR";
 
         const receiverName = text.receiverName || "dem Empfänger";
 
-        // -> hier steht jetzt IMMER die gewählte Währung (z.B. USD, GBP, JPY)
         title.textContent =
             `Sie haben ${amount.toFixed(2)} ${senderChosenCurrency} an ${receiverName} gesendet.`;
 
-        // Optional: anzeigen, was der Empfänger tatsächlich bekommt
-        if (text.amountReceiver && text.receiverCurrency) {
-            subtitle.textContent =
-                `Der Empfänger erhält ${text.amountReceiver} ${text.receiverCurrency}.`;
+        subtitle.textContent =
+            `${receiverName} erhält ${text.amountReceiver} ${text.receiverCurrency}.`;
+
+        const feeInfo = document.getElementById("fee-info");
+
+        if (text.fee && Number(text.fee) > 0) {
+            feeInfo.textContent =
+                `Es sind Gebühren in Höhe von ${text.fee} ${senderChosenCurrency} angefallen.`;
+            feeInfo.classList.remove("hidden");
         } else {
-            subtitle.textContent =
-                `Wir sagen ${receiverName} Bescheid, dass Sie Geld gesendet haben.`;
+            feeInfo.classList.add("hidden");
         }
 
     } else {
