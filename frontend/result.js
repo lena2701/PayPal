@@ -17,14 +17,15 @@ function initializeResultPage() {
     if (text.status === "COMPLETED") {
         box.classList.add("success");
 
-        const amount = text.amountSender ?? text.amount ?? 0;
-
         const senderChosenCurrency = text.senderCurrency || "EUR";
+
+        const amount = Number(text.amountSender);
+        const currency = text.senderCurrency;
 
         const receiverName = text.receiverName || "dem Empfänger";
 
         title.textContent =
-            `Sie haben ${amount.toFixed(2)} ${senderChosenCurrency} an ${receiverName} gesendet.`;
+            `Sie haben ${amount.toFixed(2)} ${currency} an ${receiverName} gesendet.`;
 
         subtitle.textContent =
             `${receiverName} erhält ${text.amountReceiver} ${text.receiverCurrency}.`;

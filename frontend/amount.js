@@ -152,11 +152,9 @@ function initializeAmountPage() {
             div.addEventListener("click", () => {
 
                 if (activeCurrencyTarget === "receive") {
-                    // User ändert die Zielwährung ↓↓↓
                     receiverCurrency = c.code;
                     receiveCurrencyBtn.innerHTML = `${receiverCurrency} <i class="fa-solid fa-chevron-down"></i>`;
                 } else {
-                    // Sender ist IMMER EUR ↓↓↓
                     senderCurrency = "EUR";
                     sendCurrencyBtn.innerHTML = `${senderCurrency} <i class="fa-solid fa-chevron-down"></i>`;
                 }
@@ -234,11 +232,12 @@ function initializeAmountPage() {
             receiverPaypalId: receiverId,
             amount: amount,
 
-            senderCurrencyCode: receiverCurrency,
+            senderCurrencyCode: "EUR",   
             receiverCurrencyCode: receiverCurrency,
 
             description: description
         };
+
 
         try {
             const response = await fetch("http://localhost:8080/api/transactions", {
