@@ -11,13 +11,13 @@ Das Projekt demonstriert eine verteilte Architektur mit klar getrennten Schichte
 Hierbei wird ein vollständiger Zahlungsprozess von der Auswahl des Empfängers bis zum Ende einer Transaktion mit Bestätigungs- oder Fehlermeldung abgebildet. 
 
 ## Inhalt 
-1. Funktionalität der Komponente (#funktionalität) 
-2. Designentscheidungen (#designentscheidungenundtechnologien)
-3. Architektur (#architektur) 
-4. Sicherheit (#sicherheit) 
-5. Datenbank (#datenbank)
-6. Abweichung zum ACD (#abweichungzumacd)
-7. Weiterentwicklung (#weiterentwicklung)
+1. [Funktionalität](#funktionalitat)
+2. [Designentscheidungen und Technologien](#designentscheidungen-und-technologien)
+3. [Architektur](#architektur)
+4. [Sicherheit](#sicherheit)
+5. [Datenbank](#datenbank)
+6. [Abweichung zum ACD](#abweichung-zum-acd)
+7. [Weiterentwicklung](#weiterentwicklung)
 
 
 ## Funktionalität 
