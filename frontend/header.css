@@ -1,0 +1,38 @@
+.pp-bg {
+    background-color: #003087 !important;
+}
+
+.navbar-brand img {
+    height: 36px;
+    filter: brightness(0) invert(1);
+}
+
+.nav-link {
+    cursor: pointer;
+    font-size: 16px;
+    color: white !important;
+}
+
+.nav-link:hover {
+    opacity: 0.85;
+}
+
+.nav-link.active {
+    font-weight: 600;
+    background: rgba(255,255,255,0.25);
+    padding: 8px 18px;
+    border-radius: 20px;
+}
+
+.nav-notify-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    font-size: 10px;
+    padding: 3px 5px;
+}
+
+.pp-logout {
+    cursor: pointer;
+    font-weight: 500;
+}

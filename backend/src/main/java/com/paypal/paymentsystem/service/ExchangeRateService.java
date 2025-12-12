@@ -6,6 +6,7 @@ import com.paypal.paymentsystem.repository.ExchangeRateRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 
 @Service
@@ -31,5 +32,23 @@ public class ExchangeRateService {
         ExchangeRate exRate = exchangeRateRepository.findByFromCurrencyAndToCurrency(fromCurrency, toCurrency)
             .orElseThrow(() -> new IllegalArgumentException("Wechselkurs wurde nicht gefunden"));
         return exRate.getRate();
+    }
+
+
+    public void updateExchangeRate(String from, String to, double rate) {
+
+        ExchangeRate ex = exchangeRateRepository
+                .findByFromCurrencyAndToCurrency(from, to)
+                .orElseGet(() -> {
+                    ExchangeRate e = new ExchangeRate();
+                    e.setFromCurrency(from);
+                    e.setToCurrency(to);
+                    return e;
+                });
+
+        ex.setRate(BigDecimal.valueOf(rate));
+        ex.setLastUpdated(LocalDateTime.now());
+
+        exchangeRateRepository.save(ex);
     }
 }

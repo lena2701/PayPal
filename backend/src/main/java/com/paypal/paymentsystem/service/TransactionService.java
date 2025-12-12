@@ -30,7 +30,7 @@ public class TransactionService {
     private final CurrencyService currencyService;
     private final ExchangeRateService exchangeRateService;
     private final DataSource dataSource;
-    private static final BigDecimal FEE_RATE = new BigDecimal("0.03"); 
+    private static final BigDecimal FEE_RATE = new BigDecimal("0.03");
 
     public Transaction processTransaction(String senderPayPalId, String receiverPayPalId, BigDecimal amount,
             String description, String senderCurrencyCode, String receiverCurrencyCode) {
@@ -64,20 +64,18 @@ public class TransactionService {
                 ? BigDecimal.ONE
                 : exchangeRateService.getRate(senderCurrency.getCode(), receiverCurrency.getCode());
 
-        BigDecimal amountReceiver = amount.multiply(exchangeRate);
-        BigDecimal fee = sameCurrency
-                ? BigDecimal.ZERO
-                : amount.multiply(FEE_RATE).setScale(2, RoundingMode.HALF_UP);
-
         String transactionId = null;
         String status = null;
         String message = null;
         int senderAccountId = 0;
         int receiverAccountId = 0;
+        BigDecimal dbFee = BigDecimal.ZERO;
+        BigDecimal dbAmountReceiver = BigDecimal.ZERO;
+        BigDecimal dbExchangeRate = exchangeRate;
 
         try (Connection connection = dataSource.getConnection();
                 CallableStatement call = connection.prepareCall(
-                        "{ CALL ProccessTransaction(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) }")) {
+                        "{ CALL ProccessTransaction(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) }")) {
 
             call.setString(1, senderPayPalId);
             call.setString(2, receiverPayPalId);
@@ -91,6 +89,9 @@ public class TransactionService {
             call.registerOutParameter(9, Types.INTEGER);
             call.registerOutParameter(10, Types.INTEGER);
             call.registerOutParameter(11, Types.CHAR);
+            call.registerOutParameter(12, Types.DECIMAL);
+            call.registerOutParameter(13, Types.DECIMAL);
+            call.registerOutParameter(14, Types.DECIMAL);
 
             call.execute();
 
@@ -100,7 +101,9 @@ public class TransactionService {
             senderAccountId = call.getInt(9);
             receiverAccountId = call.getInt(10);
             receiverCurrencyCode = call.getString(11);
-
+            dbFee = call.getBigDecimal(12);
+             dbAmountReceiver = call.getBigDecimal(13);
+             dbExchangeRate = call.getBigDecimal(14);
 
         } catch (Exception e) {
             throw new RuntimeException("Fehler beim Aufrufen der Stored Procedure", e);
@@ -113,11 +116,14 @@ public class TransactionService {
         result.setReceiverName(receiver.getFullName());
 
         result.setAmountSender(amount);
-        result.setAmountReceiver(amountReceiver);
+        result.setAmountReceiver(dbAmountReceiver);
+        result.setExchangeRate(dbExchangeRate);
         result.setSenderCurrency(senderCurrency.getCode());
-        result.setReceiverCurrency(receiverCurrencyCode); 
-        result.setExchangeRate(exchangeRate);
-        result.setFee(fee);
+        result.setReceiverCurrency(receiverCurrencyCode);
+
+        // 🔥 FIX: Fee richtig setzen!
+        result.setFee(dbFee);
+
         result.setStatus(status);
         result.setDescription(message);
         result.setCreatedAt(LocalDateTime.now());

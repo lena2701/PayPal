@@ -1,28 +1,33 @@
 function initializeSearchUserPage() {
 
-    console.log("SEARCH USER JS WIRD GELADEN");
+    console.log("Neue SEARCH USER JS geladen (mit Weiter-Button Logik)");
 
     const searchInput = document.getElementById('user-search');
-    const searchDropdown = document.getElementById('search-dropdown');
+    const dropdown = document.getElementById('search-dropdown');
+    const nextButton = document.getElementById('next-btn');
 
-    if (!searchInput || !searchDropdown) {
+    let selectedUser = null; 
+
+    if (!searchInput || !dropdown || !nextButton) {
         console.error("Suchelemente nicht gefunden!");
         return;
     }
 
-    async function fetchUsersFromBackend(name) {
+    function updateNextButtonState() {
+        const enabled = !!selectedUser;
+        nextButton.disabled = !enabled;
+        nextButton.style.cursor = enabled ? "pointer" : "not-allowed";
+    }
+
+    async function fetchUsers(name) {
         try {
             const url = "http://localhost:8080/api/users/search?name=" + encodeURIComponent(name);
             const res = await fetch(url);
 
-            if (!res.ok) {
-                console.error("Backend Fehler:", res.status);
-                return [];
-            }
-
+            if (!res.ok) return [];
             return await res.json();
-        } catch (error) {
-            console.error("Fehler beim Laden der Nutzer:", error);
+        } catch (err) {
+            console.error("Fehler beim Laden der Nutzer:", err);
             return [];
         }
     }
@@ -33,70 +38,66 @@ function initializeSearchUserPage() {
         "PayPal Funding System"
     ];
 
-    function getColor(initials) {
-        const colors = {
-            "TL": "#70C0FF",
-            "MH": "#FFB800"
-        };
-        return colors[initials] || "#003087";
-    }
+    searchInput.addEventListener("input", async () => {
+        const value = searchInput.value.trim();
 
-    searchInput.addEventListener('input', async function () {
-        const filter = searchInput.value.trim();
-        searchDropdown.innerHTML = '';
+        dropdown.innerHTML = "";
+        selectedUser = null;
+        updateNextButtonState();
 
-        if (filter === '') {
-            searchDropdown.classList.remove('visible');
-            searchDropdown.classList.add('hidden');
+        if (!value) {
+            dropdown.classList.add("d-none");
             return;
         }
 
-        let users = await fetchUsersFromBackend(filter);
-
+        let users = await fetchUsers(value);
         users = users.filter(u => !hiddenUsers.includes(u.fullName));
 
         if (users.length === 0) {
-            searchDropdown.classList.remove('visible');
-            searchDropdown.classList.add('hidden');
+            dropdown.classList.add("d-none");
             return;
         }
 
+        dropdown.classList.remove("d-none");
+
         users.forEach(user => {
-            if (!user.fullName || !user.paypalUserId) {
-                console.warn("Überspringe Eintrag ohne paypalUserId oder Name", user);
-                return;
-            }
+            const item = document.createElement("button");
+            item.className =
+                "list-group-item list-group-item-action d-flex align-items-center gap-3 search-result";
 
-            const userDiv = document.createElement('div');
-            userDiv.classList.add('search-item');
-
-            userDiv.innerHTML = `
-                <div class="search-item-inner">
-                    <div class="search-bubble" style="background:${getColor(user.initials)}">
-                        ${user.initials}
-                    </div>
-                    <span>${user.fullName}</span>
-                </div>
+            item.innerHTML = `
+                <div class="pp-bubble">${user.initials}</div>
+                <span class="fw-semibold">${user.fullName}</span>
             `;
-            userDiv.addEventListener("click", () => {
-                const ziel =
-                    `amount.html?name=${encodeURIComponent(user.fullName)}&initials=${encodeURIComponent(user.initials)}&paypalId=${encodeURIComponent(user.paypalUserId)}`;
 
-                window.location.href = ziel;
+            item.addEventListener("click", () => {
+                selectedUser = user; 
+                searchInput.value = user.fullName;
+                dropdown.classList.add("d-none"); 
+                updateNextButtonState(); 
             });
 
-            searchDropdown.appendChild(userDiv);
+            dropdown.appendChild(item);
         });
-
-        searchDropdown.classList.remove('hidden');
-        searchDropdown.classList.add('visible');
     });
 
-    document.addEventListener('click', function (event) {
-        if (!searchDropdown.contains(event.target) &&
-            event.target !== searchInput) {
-            searchDropdown.classList.remove('visible');
-            searchDropdown.classList.add('hidden');
+    document.addEventListener("click", (e) => {
+        if (!dropdown.contains(e.target) && e.target !== searchInput) {
+            dropdown.classList.add("d-none");
         }
     });
+
+    nextButton.addEventListener("click", () => {
+        if (!selectedUser) {
+            alert("Bitte wählen Sie einen Empfänger aus.");
+            return;
+        }
+
+        const ziel =
+            `amount.html?name=${encodeURIComponent(selectedUser.fullName)}&initials=${encodeURIComponent(selectedUser.initials)}&paypalId=${encodeURIComponent(selectedUser.paypalUserId)}`;
+
+        window.location.href = ziel;
+    });
+
+    updateNextButtonState();
 }

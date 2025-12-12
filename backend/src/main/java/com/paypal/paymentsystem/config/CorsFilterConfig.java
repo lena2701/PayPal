@@ -21,7 +21,6 @@ public class CorsFilterConfig implements Filter {
         response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
         response.setHeader("Access-Control-Max-Age", "3600");
 
-        // Preflight-Anfrage sofort beantworten
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             response.setStatus(HttpServletResponse.SC_OK);
             return;
